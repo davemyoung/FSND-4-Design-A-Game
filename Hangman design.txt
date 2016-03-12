@@ -1,0 +1,36 @@
+﻿Game Design Project - Hangman
+
+
+To start the process, I transferred the existing base game structure over to a new folder location, renamed it Hangman and took a thorough review of what could be novated to the new game and what would need to be started over. 
+
+
+The actual logic of the game and the rules were taken from Wikipaedia. 
+
+
+Also the structure and code of the sample project TicTacToe, https://github.com/udacity-freelance/FSND-P4-Refresh.git, was examined in the process to see best practise. 
+
+
+The user registration structure on the first sweep was fine and with some relabelling would suffice and be good. At the latter stages of the project the user class was extended so that users had extra entities that would allow user rankings to be formed. At first I was convinced this would not be needed for a lean design and following normal database rational, it would be wasteful to add extra fields for wins and played matches. After reading around the subject for a while I now understand that with paid traffic systems and the way Datastore is structured , that the optimal method for this game is to have the extra fields. 
+
+
+https://www.shiftedup.com/2015/03/08/how-to-count-all-entries-of-a-given-type-in-the-app-engine-datastore
+
+
+http://learntogoogleit.com/post/65411773811/counting-entities-in-the-app-engine-datastore
+
+
+
+
+So now the program, has functions that within the flow of the game at the point where the user is told you win or the game is over (you lost), the program puts the necessary data (increasing the win count and/or the games played count up by one. This is used in a simple win ratio to determine the player rankings with an exception rule that if a player has not played a game, they cannot be ranked. 
+
+
+Whilst determining the simple game play, I searched through other instances of hangman to try and determine the best code structure of the project. For this instance it was decided that the stripped down essentials would be the secret word, and the letters guessed, attemps left. Other functionality on top is within the game such as guesses taken to finish the game ,  a win count and  is a game active or not. 
+
+
+By only recording the minimum a lean design is achieved. This allows the building of the blanks, letters under the hangman  (ie  h_ng_m_n) to be quickly assembled from a simple loop on the browser side, and obviously corresponding pictures of the hangman can be quickly called to match the amount of attempts left . 
+
+
+The select a word is just included as a simple list of words with an imported random function to choose the word, further improvements could be to link to an external library or to adapt the game to have a two player function where one inputs the word. 
+
+
+The biggest trade offs in the design are the adaptations to fit in with the logic of the Google Datastore which often makes simple task such as grouping and counting into more elaborate functions where the count has to be maintained throughout the proesses. This is necessary but did feel strange to have to change to suboptimal data structures to suit the framework.
