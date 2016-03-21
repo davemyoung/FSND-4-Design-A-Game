@@ -28,7 +28,9 @@ GET_HIGH_SCORES_REQUEST = endpoints.ResourceContainer(results= messages.IntegerF
 
 MEMCACHE_MOVES_REMAINING = 'MOVES_REMAINING'
 
-@endpoints.api(name='hangman', version='v1')
+@endpoints.api(name='hangman', version='v1'audiences=[ANDROID_AUDIENCE],
+    allowed_client_ids=[WEB_CLIENT_ID, API_EXPLORER_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID],
+    scopes=[EMAIL_SCOPE])
 class HangmanApi(remote.Service):
     """Game API"""
     @endpoints.method(request_message=USER_REQUEST,
