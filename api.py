@@ -15,6 +15,7 @@ from models import User, Game, Score
 from models import StringMessage, NewGameForm, GameForm, MakeMoveForm,\
     ScoreForms,GameForms, UserForm, UserForms
 from utils import get_by_urlsafe
+import re
 
 NEW_GAME_REQUEST = endpoints.ResourceContainer(NewGameForm)
 GET_GAME_REQUEST = endpoints.ResourceContainer(
@@ -43,7 +44,13 @@ class HangmanApi(remote.Service):
         if User.query(User.name == request.user_name).get():
             raise endpoints.ConflictException(
                     'A User with that name already exists!')
+        """ import function from regex used to check email validity"""
         user = User(name=request.user_name, email=request.email)
+        match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',request.email)
+        
+        if match == None:
+            print('invalid email entry')
+            raise ValueError('Bad Syntax')
         user.put()
         return StringMessage(message='User {} created!'.format(
                 request.user_name))
@@ -81,6 +88,9 @@ class HangmanApi(remote.Service):
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
         if game.game_over:
             return game.to_form('Game already over!')
+        """code added to check letter has not already been guessed"""
+        if request.guess in game.lettersguessed:
+            raise endpoints.BadRequestException('repeated letter')
         game.lettersguessed += request.guess
         hangmanprogress = ''
         failed = 0
